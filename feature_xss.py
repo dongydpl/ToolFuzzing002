@@ -27,22 +27,21 @@ class XSSThread(QThread):
         """Bộ lọc thông minh: Phân biệt XSS thật và Ảnh vỡ"""
         soup = BeautifulSoup(html, 'html.parser')
         for tag in soup.find_all(True):
-            # 1. Nếu payload nằm trong Text (nguy hiểm)
+        
             if tag.string and payload in tag.string:
                 return True
             
-            # 2. Kiểm tra thuộc tính
+           
             for attr, value in tag.attrs.items():
                 if isinstance(value, str) and payload in value:
-                    # Nguy hiểm nếu là sự kiện 'on...'
+                    
                     if attr.startswith('on'):
                         return True
-                    # Nguy hiểm nếu là thuộc tính đường dẫn NHƯNG có kèm dấu breakout ("><)
                     if attr in ['src', 'href', 'data', 'action', 'formaction']:
                         if '"><' in payload or "'><" in payload:
                             return True
-                        return False # Nếu nằm trong src mà không có dấu breakout -> Ảnh vỡ (An toàn)
-        return True # Mặc định là nguy hiểm
+                        return False 
+        return True 
 
     def run(self):
         self.log_process.emit("<b style='color:orange'>🔥 BẮT ĐẦU CÀN QUÉT VỚI BỘ LỌC NGỮ CẢNH...</b>")
@@ -51,7 +50,6 @@ class XSSThread(QThread):
             if not self.is_running: break
             self.log_process.emit(f"<hr><b>[*] Đang xử lý:</b> {url}")
 
-            # 1. GET injection
             parsed = urlparse(url)
             params = parse_qs(parsed.query)
             base_url = f"{parsed.scheme}://{parsed.netloc}{parsed.path}"
@@ -73,7 +71,6 @@ class XSSThread(QThread):
                                 break 
                         except: pass
 
-            # 2. FORM injection (Atomic & Deduplicated)
             try:
                 res = requests.get(url, headers=self.headers, timeout=5)
                 soup = BeautifulSoup(res.text, 'html.parser')

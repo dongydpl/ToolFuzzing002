@@ -3,11 +3,11 @@ from PyQt6.QtWidgets import QApplication, QMainWindow, QTableWidgetItem, QMessag
 from PyQt6.QtCore import Qt
 
 # --- IMPORT CÁC FILE CỦA BẠN ---
-from GUICrawl import Ui_MainWindow       # Import Giao diện
-from feature_crawl import CrawlerThread  # Import logic nút Crawl
-from feature_lfi import LFIThread        # Import logic nút Tấn công
-from feature_sqli import SQLiThread  # Import logic nút SQLi 
-from feature_xss import XSSThread  # Import logic nút XSS
+from GUICrawl import Ui_MainWindow      
+from feature_crawl import CrawlerThread  
+from feature_lfi import LFIThread        
+from feature_sqli import SQLiThread  
+from feature_xss import XSSThread  
 
 class PhanMemLFI(QMainWindow):
     def __init__(self):
@@ -18,7 +18,7 @@ class PhanMemLFI(QMainWindow):
         self.danh_sach_muc_tieu_co_tham_so = []
         self.danh_sach_muc_tieu_full = []
 
-        # --- CẤU HÌNH BẢNG (tableWidget) ---
+       
         self.ui.tableWidget.setColumnCount(4)
         self.ui.tableWidget.setHorizontalHeaderLabels(["STT", "URL Mục Tiêu", "Payload", "Kết Quả"])
         header = self.ui.tableWidget.horizontalHeader()
@@ -27,50 +27,47 @@ class PhanMemLFI(QMainWindow):
         header.setSectionResizeMode(2, QHeaderView.ResizeMode.Stretch)
         header.setSectionResizeMode(3, QHeaderView.ResizeMode.ResizeToContents)
 
-        # --- KẾT NỐI NÚT BẤM VỚI CÁC HÀM BÊN DƯỚI ---
+       
         self.ui.jBntScan.clicked.connect(self.xu_ly_crawl)
         self.ui.pushButton.clicked.connect(self.xu_ly_lfi)
         self.ui.pushButton.setEnabled(False)
         self.ui.btnSQLi.clicked.connect(self.xu_ly_sqli)
         self.ui.btnXSS.clicked.connect(self.xu_ly_xss)
-        self.ui.btnXSS.setEnabled(False) # Mặc định tắt khi chưa có link ngon nào
-        self.ui.btnSQLi.setEnabled(False) # Mặc định tắt khi chưa có link ngon nào
+        self.ui.btnXSS.setEnabled(False) 
+        self.ui.btnSQLi.setEnabled(False) 
 
-    # ==========================================
-    # PHẦN XỬ LÝ NÚT CRAWL (GỌI FILE 1)
-    # ==========================================
+
     def xu_ly_crawl(self):
-        # 1. Lấy link từ ô nhập liệu
+        
         url = self.ui.txtGetLink.toPlainText().strip()
 
-        # 2. Kiểm tra đầu vào
+      
         if not url:
             QMessageBox.warning(self, "Lỗi", "Vui lòng nhập URL!")
             return
 
-        # Tự động thêm http:// nếu người dùng quên
+        
         if not url.startswith("http"):
             url = "http://" + url
             self.ui.txtGetLink.setPlainText(url)
 
-        # 3. Reset giao diện về trạng thái ban đầu
+        
         self.danh_sach_muc_tieu_co_tham_so = []
         self.danh_sach_muc_tieu_full = []
         self.ui.textBrowser.clear()
-        self.ui.jBntScan.setEnabled(False)  # Khóa nút quét
-        self.ui.jBntScan.setText("Đang chạy...")  # Đổi tên nút
+        self.ui.jBntScan.setEnabled(False)  
+        self.ui.jBntScan.setText("Đang chạy...")  
 
-        # 4. Khởi tạo "Công nhân" Crawler (Độ sâu 3 để test cho nhanh)
+       
         self.crawler = CrawlerThread(url, 3)
 
-        # --- [QUAN TRỌNG] KẾT NỐI TÍN HIỆU (TÊN TIẾNG VIỆT) ---
-        # Đảm bảo file feature_crawl.py cũng dùng tên: tin_nhan, tim_thay_link, hoan_thanh
+      
         self.crawler.tin_nhan.connect(self.ui.textBrowser.append)
         self.crawler.tim_thay_link_co_tham_so.connect(self.luu_link_ngon_co_tham_so)
         self.crawler.tim_thay_link_full.connect(self.luu_link_ngon_full)
         self.crawler.hoan_thanh.connect(self.crawl_xong)
 
-        # 5. Ra lệnh chạy
+       
         self.crawler.start()
 
     def luu_link_ngon_co_tham_so(self, url):
@@ -91,20 +88,16 @@ class PhanMemLFI(QMainWindow):
         else:
             QMessageBox.warning(self, "Thông báo", "Không tìm thấy link nào.")
 
-    # ==========================================
-    # PHẦN XỬ LÝ NÚT LFI (GỌI FILE 2)
-    # ==========================================
+  
     def xu_ly_lfi(self):
         self.ui.tableWidget.setRowCount(0)
 
-        # Gọi "Công nhân" LFI từ file feature_lfi.py
+       
         self.attacker = LFIThread(self.danh_sach_muc_tieu_co_tham_so)
-
-        # Kết nối dây tin nhắn
+       
         self.attacker.log_process.connect(self.ui.textBrowser.append)
         self.attacker.ket_qua_scan.connect(self.dien_vao_bang)
 
-        # Bắt đầu làm việc
         self.attacker.start()
 
     def dien_vao_bang(self, url, payload, status):
@@ -118,14 +111,10 @@ class PhanMemLFI(QMainWindow):
         item_status = QTableWidgetItem(status)
         item_status.setForeground(Qt.GlobalColor.red)
         self.ui.tableWidget.setItem(row, 3, item_status)
-     # ==========================================
-    # PHẦN XỬ LÝ NÚT SQLi (GỌI FILE 3)
-    # ==========================================
+    
     def xu_ly_sqli(self):
         self.ui.tableWidget.setRowCount(0)
         self.attacker_sql = SQLiThread(self.danh_sach_muc_tieu_full)
-        
-        # Kết nối tín hiệu
         self.attacker_sql.log_process.connect(self.ui.textBrowser.append)
         self.attacker_sql.ket_qua_scan.connect(self.dien_vao_bang)
         self.attacker_sql.hoan_thanh.connect(lambda: QMessageBox.information(self, "Xong", "Đã quét xong SQLi!"))
@@ -133,8 +122,6 @@ class PhanMemLFI(QMainWindow):
         self.attacker_sql.start()
     def xu_ly_xss(self):
         self.attacker_xss = XSSThread(self.danh_sach_muc_tieu_full)
-        
-        # Kết nối tín hiệu
         self.attacker_xss.log_process.connect(self.ui.textBrowser.append)
         self.attacker_xss.ket_qua_scan.connect(self.dien_vao_bang)
         self.attacker_xss.hoan_thanh.connect(lambda: QMessageBox.information(self, "Xong", "Đã quét xong XSS!"))

@@ -1,0 +1,343 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>MainWindow</class>
+ <widget class="QMainWindow" name="MainWindow">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>924</width>
+    <height>600</height>
+   </rect>
+  </property>
+  <property name="windowTitle">
+   <string>MainWindow</string>
+  </property>
+  <property name="styleSheet">
+   <string notr="true">/* ===================================================
+   1. NỀN CHUNG VÀ CÁC Ô NHẬP LIỆU / HIỂN THỊ
+   =================================================== */
+QWidget#centralwidget {
+    background-color: #f4f6f9;
+}
+
+QTextEdit, QTextBrowser {
+    background-color: #ffffff;
+    border: 1px solid #ced4da;
+    border-radius: 8px;
+    padding: 6px;
+    font-size: 13px;
+}
+
+/* ===================================================
+   2. BẢNG KẾT QUẢ (TABLE WIDGET) VÀ TAB WIDGET
+   =================================================== */
+QTableWidget {
+    background-color: #ffffff;
+    border: 1px solid #ced4da;
+    border-radius: 8px;
+    gridline-color: #e9ecef;
+    font-size: 13px;
+}
+
+QHeaderView::section {
+    background-color: #343a40;
+    color: #ffffff;
+    font-weight: bold;
+    padding: 5px;
+    border: none;
+    border-right: 1px solid #495057;
+}
+
+QTabWidget::pane {
+    border: 1px solid #ced4da;
+    border-radius: 6px;
+    background: #ffffff;
+}
+
+QTabBar::tab {
+    background: #e9ecef;
+    border: 1px solid #ced4da;
+    padding: 6px 16px;
+    border-top-left-radius: 6px;
+    border-top-right-radius: 6px;
+    margin-right: 2px;
+}
+
+QTabBar::tab:selected {
+    background: #ffffff;
+    border-bottom-color: #ffffff;
+    font-weight: bold;
+    color: #0d6efd;
+}
+
+/* ===================================================
+   3. NÚT BẤM (BO TRÒN, ĐỔ MÀU THEO CHỨC NĂNG)
+   =================================================== */
+QPushButton {
+    color: #ffffff;
+    font-weight: bold;
+    font-size: 13px;
+    border-radius: 12px; /* Bo tròn mềm mại ở đây */
+    padding: 6px 12px;
+    border: none;
+}
+
+/* Trạng thái nút bị khóa (khi chưa có link) */
+QPushButton:disabled {
+    background-color: #ced4da;
+    color: #6c757d;
+}
+
+/* ---&gt; Nút Quét (jBntScan) - Màu Xanh Dương &lt;--- */
+QPushButton#jBntScan {
+    background-color: #0d6efd; 
+}
+QPushButton#jBntScan:hover {
+    background-color: #0b5ed7; 
+}
+
+/* ---&gt; Nút Path Traversal (pushButton) - Màu Cam &lt;--- */
+QPushButton#pushButton {
+    background-color: #fd7e14;
+}
+QPushButton#pushButton:hover {
+    background-color: #e85e0c;
+}
+
+/* ---&gt; Nút SQLi (btnSQLi) - Màu Đỏ &lt;--- */
+QPushButton#btnSQLi {
+    background-color: #dc3545;
+}
+QPushButton#btnSQLi:hover {
+    background-color: #c82333;
+}
+
+/* ---&gt; Nút XSS (btnXSS) - Màu Xanh Lá &lt;--- */
+QPushButton#btnXSS {
+    background-color: #198754;
+}
+QPushButton#btnXSS:hover {
+    background-color: #157347;
+}</string>
+  </property>
+  <widget class="QWidget" name="centralwidget">
+   <widget class="QTextEdit" name="txtGetLink">
+    <property name="geometry">
+     <rect>
+      <x>80</x>
+      <y>50</y>
+      <width>221</width>
+      <height>31</height>
+     </rect>
+    </property>
+   </widget>
+   <widget class="QLabel" name="label">
+    <property name="geometry">
+     <rect>
+      <x>200</x>
+      <y>0</y>
+      <width>571</width>
+      <height>41</height>
+     </rect>
+    </property>
+    <property name="font">
+     <font>
+      <family>Showcard Gothic</family>
+      <pointsize>26</pointsize>
+     </font>
+    </property>
+    <property name="text">
+     <string>TOOL FUZZING KIỂM THỬ CƠ BẢN</string>
+    </property>
+   </widget>
+   <widget class="QLabel" name="label_2">
+    <property name="geometry">
+     <rect>
+      <x>0</x>
+      <y>50</y>
+      <width>71</width>
+      <height>31</height>
+     </rect>
+    </property>
+    <property name="font">
+     <font>
+      <family>Segoe UI</family>
+      <pointsize>-1</pointsize>
+      <bold>true</bold>
+     </font>
+    </property>
+    <property name="mouseTracking">
+     <bool>false</bool>
+    </property>
+    <property name="styleSheet">
+     <string notr="true">font-family: &quot;Segoe UI&quot;, Roboto, Arial, sans-serif;
+    font-size: 14px;
+    font-weight: bold;
+    color: #34495e; /* Màu xám xanh đậm (Slate Gray) sang trọng */
+    background-color: transparent; /* Nền trong suốt để không bị lộ viền vuông */
+    padding-bottom: 2px;</string>
+    </property>
+    <property name="text">
+     <string>Nhập URL</string>
+    </property>
+   </widget>
+   <widget class="QPushButton" name="jBntScan">
+    <property name="geometry">
+     <rect>
+      <x>310</x>
+      <y>50</y>
+      <width>101</width>
+      <height>31</height>
+     </rect>
+    </property>
+    <property name="styleSheet">
+     <string notr="true">
+
+/* CSS */
+.button-33 {
+  background-color: #c2fbd7;
+  border-radius: 100px;
+  box-shadow: rgba(44, 187, 99, .2) 0 -25px 18px -14px inset,rgba(44, 187, 99, .15) 0 1px 2px,rgba(44, 187, 99, .15) 0 2px 4px,rgba(44, 187, 99, .15) 0 4px 8px,rgba(44, 187, 99, .15) 0 8px 16px,rgba(44, 187, 99, .15) 0 16px 32px;
+  color: green;
+  cursor: pointer;
+  display: inline-block;
+  font-family: CerebriSans-Regular,-apple-system,system-ui,Roboto,sans-serif;
+  padding: 7px 20px;
+  text-align: center;
+  text-decoration: none;
+  transition: all 250ms;
+  border: 0;
+  font-size: 16px;
+  user-select: none;
+  -webkit-user-select: none;
+  touch-action: manipulation;
+}
+
+.button-33:hover {
+  box-shadow: rgba(44,187,99,.35) 0 -25px 18px -14px inset,rgba(44,187,99,.25) 0 1px 2px,rgba(44,187,99,.25) 0 2px 4px,rgba(44,187,99,.25) 0 4px 8px,rgba(44,187,99,.25) 0 8px 16px,rgba(44,187,99,.25) 0 16px 32px;
+  transform: scale(1.05) rotate(-1deg);
+}</string>
+    </property>
+    <property name="text">
+     <string>Bắt đầu quét</string>
+    </property>
+   </widget>
+   <widget class="QTabWidget" name="tabWidget">
+    <property name="geometry">
+     <rect>
+      <x>0</x>
+      <y>140</y>
+      <width>921</width>
+      <height>391</height>
+     </rect>
+    </property>
+    <property name="currentIndex">
+     <number>1</number>
+    </property>
+    <widget class="QWidget" name="tab">
+     <attribute name="title">
+      <string>Tab 1</string>
+     </attribute>
+     <widget class="QTextBrowser" name="textBrowser">
+      <property name="geometry">
+       <rect>
+        <x>0</x>
+        <y>0</y>
+        <width>911</width>
+        <height>371</height>
+       </rect>
+      </property>
+     </widget>
+    </widget>
+    <widget class="QWidget" name="Tab_2">
+     <attribute name="title">
+      <string>Kết quả </string>
+     </attribute>
+     <widget class="QTableWidget" name="tableWidget">
+      <property name="geometry">
+       <rect>
+        <x>0</x>
+        <y>0</y>
+        <width>921</width>
+        <height>361</height>
+       </rect>
+      </property>
+      <column>
+       <property name="text">
+        <string>STT</string>
+       </property>
+      </column>
+      <column>
+       <property name="text">
+        <string>URL</string>
+       </property>
+      </column>
+      <column>
+       <property name="text">
+        <string>PAYLOAD</string>
+       </property>
+      </column>
+      <column>
+       <property name="text">
+        <string>TRẠNG THÁI</string>
+       </property>
+      </column>
+     </widget>
+    </widget>
+   </widget>
+   <widget class="QPushButton" name="pushButton">
+    <property name="geometry">
+     <rect>
+      <x>420</x>
+      <y>50</y>
+      <width>171</width>
+      <height>31</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>Tấn công path traversal</string>
+    </property>
+   </widget>
+   <widget class="QPushButton" name="btnSQLi">
+    <property name="geometry">
+     <rect>
+      <x>600</x>
+      <y>50</y>
+      <width>111</width>
+      <height>31</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>Tấn công SQLi</string>
+    </property>
+   </widget>
+   <widget class="QPushButton" name="btnXSS">
+    <property name="geometry">
+     <rect>
+      <x>720</x>
+      <y>50</y>
+      <width>111</width>
+      <height>31</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>Tấn công XSS</string>
+    </property>
+   </widget>
+  </widget>
+  <widget class="QMenuBar" name="menubar">
+   <property name="geometry">
+    <rect>
+     <x>0</x>
+     <y>0</y>
+     <width>924</width>
+     <height>22</height>
+    </rect>
+   </property>
+  </widget>
+  <widget class="QStatusBar" name="statusbar"/>
+ </widget>
+ <resources/>
+ <connections/>
+</ui>

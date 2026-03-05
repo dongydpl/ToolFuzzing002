@@ -18,6 +18,7 @@ class Ui_MainWindow(object):
 "   =================================================== */\n"
 "QWidget#centralwidget {\n"
 "    background-color: #f4f6f9;\n"
+"    color: #212529;\n"
 "}\n"
 "\n"
 "QTextEdit, QTextBrowser {\n"
@@ -118,18 +119,22 @@ class Ui_MainWindow(object):
 "}\n"
 "QPushButton#btnXSS:hover {\n"
 "    background-color: #157347;\n"
-"}")
+"}\n"
+"")
         self.centralwidget = QtWidgets.QWidget(parent=MainWindow)
         self.centralwidget.setObjectName("centralwidget")
         self.txtGetLink = QtWidgets.QTextEdit(parent=self.centralwidget)
         self.txtGetLink.setGeometry(QtCore.QRect(80, 50, 221, 31))
         self.txtGetLink.setObjectName("txtGetLink")
         self.label = QtWidgets.QLabel(parent=self.centralwidget)
-        self.label.setGeometry(QtCore.QRect(200, 0, 571, 41))
+        self.label.setGeometry(QtCore.QRect(160, 0, 611, 41))
         font = QtGui.QFont()
-        font.setFamily("Showcard Gothic")
+        font.setFamily("Yu Gothic Medium")
         font.setPointSize(26)
+        font.setBold(True)
         self.label.setFont(font)
+        self.label.setStyleSheet("color: #212529; /* Đổi màu chữ thành xám đậm/đen để nổi trên nền sáng */\n"
+"    font-weight: bold;")
         self.label.setObjectName("label")
         self.label_2 = QtWidgets.QLabel(parent=self.centralwidget)
         self.label_2.setGeometry(QtCore.QRect(0, 50, 71, 31))

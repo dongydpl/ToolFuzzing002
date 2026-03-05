@@ -48,38 +48,12 @@ class CrawlerThread(QThread):
 
                 if depth < self.max_depth:
                     soup = BeautifulSoup(res.text, "html.parser")
-                    for form in soup.find_all("form"):#tim the form
-                        method = form.get("method", "GET").upper()
-                        action = form.get("action", "")
-                        form_url = urljoin(url, action)
-                        if method == "GET":
-                            inputs = form.find_all(["input", "select", "textarea"])
-                            params = []
-                            for inp in inputs:
-                                name = inp.get("name")
-                                if name and inp.get('type') not in ['submit', 'button', 'image', 'reset']:
-                                    params.append(f"{name}=FUZZ_TEST")
-                            if params:
-                                query_string = "&".join(params)
-                                full_param_url = f"{form_url}?{query_string}"
-                                
-                                self.tin_nhan.emit(f"<b style='color:purple;'>[+] PHÁT HIỆN FORM GET: {full_param_url}</b>")
-                                
-                                self.tim_thay_link_co_tham_so.emit(full_param_url)
-                                
-                        
-                        if form_url not in visited:
-                            self.tim_thay_link_full.emit(form_url)
-                            visited.add(form_url)
-
                     
-                    for tag in soup.find_all("a"):#tim the a
+                    for tag in soup.find_all("a"):
                         href = tag.get("href")
                         if not href: continue
                         
                         full_url = urljoin(url, href)
-
-                        # Chỉ quét các link nằm trong cùng tên miền (domain)
                         if urlparse(full_url).netloc == urlparse(target).netloc:
                             if full_url not in visited:
                                 self.tim_thay_link_full.emit(full_url)

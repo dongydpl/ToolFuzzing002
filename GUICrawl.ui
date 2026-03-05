@@ -19,6 +19,7 @@
    =================================================== */
 QWidget#centralwidget {
     background-color: #f4f6f9;
+	color: #212529;
 }
 
 QTextEdit, QTextBrowser {
@@ -119,7 +120,8 @@ QPushButton#btnXSS {
 }
 QPushButton#btnXSS:hover {
     background-color: #157347;
-}</string>
+}
+</string>
   </property>
   <widget class="QWidget" name="centralwidget">
    <widget class="QTextEdit" name="txtGetLink">
@@ -135,17 +137,22 @@ QPushButton#btnXSS:hover {
    <widget class="QLabel" name="label">
     <property name="geometry">
      <rect>
-      <x>200</x>
+      <x>160</x>
       <y>0</y>
-      <width>571</width>
+      <width>611</width>
       <height>41</height>
      </rect>
     </property>
     <property name="font">
      <font>
-      <family>Showcard Gothic</family>
+      <family>Yu Gothic Medium</family>
       <pointsize>26</pointsize>
+      <bold>true</bold>
      </font>
+    </property>
+    <property name="styleSheet">
+     <string notr="true">color: #212529; /* Đổi màu chữ thành xám đậm/đen để nổi trên nền sáng */
+    font-weight: bold;</string>
     </property>
     <property name="text">
      <string>TOOL FUZZING KIỂM THỬ CƠ BẢN</string>

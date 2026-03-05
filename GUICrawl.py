@@ -14,122 +14,128 @@ class Ui_MainWindow(object):
         MainWindow.setObjectName("MainWindow")
         MainWindow.resize(924, 600)
         MainWindow.setStyleSheet("/* ===================================================\n"
-"   1. NỀN CHUNG VÀ CÁC Ô NHẬP LIỆU / HIỂN THỊ\n"
+"   1. NỀN CHUNG VÀ CÁC CHỮ (TEXT/LABEL)\n"
 "   =================================================== */\n"
 "QWidget#centralwidget {\n"
-"    background-color: #f4f6f9;\n"
-"    color: #212529;\n"
+"    background-color: #f8f9fa; /* Màu nền xám trắng hiện đại */\n"
 "}\n"
 "\n"
-"QTextEdit, QTextBrowser {\n"
-"    background-color: #ffffff;\n"
-"    border: 1px solid #ced4da;\n"
-"    border-radius: 8px;\n"
-"    padding: 6px;\n"
-"    font-size: 13px;\n"
+"/* SỬA LỖI TÀNG HÌNH TIÊU ĐỀ CHÍNH */\n"
+"QLabel#label {\n"
+"    color: #2c3e50; /* Màu xám đen đậm cho chữ Tool Fuzzing */\n"
+"    font-weight: bold;\n"
+"}\n"
+"\n"
+"/* Chữ \"Nhập URL\" */\n"
+"QLabel#label_2 {\n"
+"    color: #34495e; \n"
+"    font-weight: bold;\n"
+"    font-size: 14px;\n"
+"    font-family: \"Segoe UI\", Roboto, Arial, sans-serif;\n"
 "}\n"
 "\n"
 "/* ===================================================\n"
-"   2. BẢNG KẾT QUẢ (TABLE WIDGET) VÀ TAB WIDGET\n"
+"   2. CÁC Ô NHẬP LIỆU VÀ HIỂN THỊ LOG (TEXT AREA)\n"
 "   =================================================== */\n"
-"QTableWidget {\n"
+"QTextEdit, QTextBrowser {\n"
 "    background-color: #ffffff;\n"
-"    border: 1px solid #ced4da;\n"
+"    border: 2px solid #ced4da;\n"
 "    border-radius: 8px;\n"
-"    gridline-color: #e9ecef;\n"
-"    font-size: 13px;\n"
+"    padding: 8px;\n"
+"    font-size: 14px;\n"
+"    color: #212529;\n"
 "}\n"
 "\n"
-"QHeaderView::section {\n"
-"    background-color: #343a40;\n"
-"    color: #ffffff;\n"
-"    font-weight: bold;\n"
-"    padding: 5px;\n"
-"    border: none;\n"
-"    border-right: 1px solid #495057;\n"
+"/* Hiệu ứng khi bấm chuột vào ô nhập URL */\n"
+"QTextEdit:focus {\n"
+"    border: 2px solid #86b7fe; \n"
 "}\n"
 "\n"
+"/* ===================================================\n"
+"   3. BẢNG KẾT QUẢ VÀ CÁC TAB (TAB WIDGET)\n"
+"   =================================================== */\n"
 "QTabWidget::pane {\n"
 "    border: 1px solid #ced4da;\n"
-"    border-radius: 6px;\n"
+"    border-radius: 8px;\n"
 "    background: #ffffff;\n"
+"    top: -1px;\n"
 "}\n"
 "\n"
 "QTabBar::tab {\n"
 "    background: #e9ecef;\n"
 "    border: 1px solid #ced4da;\n"
-"    padding: 6px 16px;\n"
-"    border-top-left-radius: 6px;\n"
-"    border-top-right-radius: 6px;\n"
+"    padding: 8px 20px;\n"
+"    border-top-left-radius: 8px;\n"
+"    border-top-right-radius: 8px;\n"
 "    margin-right: 2px;\n"
+"    color: #495057;\n"
+"    font-weight: bold;\n"
 "}\n"
 "\n"
 "QTabBar::tab:selected {\n"
 "    background: #ffffff;\n"
 "    border-bottom-color: #ffffff;\n"
+"    color: #0d6efd; /* Chữ màu xanh khi chọn tab */\n"
+"}\n"
+"\n"
+"QTableWidget {\n"
+"    background-color: #ffffff;\n"
+"    border: none;\n"
+"    gridline-color: #e9ecef;\n"
+"    font-size: 13px;\n"
+"    color: #212529;\n"
+"}\n"
+"\n"
+"QHeaderView::section {\n"
+"    background-color: #343a40; /* Nền đen nhạt cho tiêu đề bảng */\n"
+"    color: #ffffff;\n"
 "    font-weight: bold;\n"
-"    color: #0d6efd;\n"
+"    padding: 8px;\n"
+"    border: none;\n"
+"    border-right: 1px solid #495057;\n"
 "}\n"
 "\n"
 "/* ===================================================\n"
-"   3. NÚT BẤM (BO TRÒN, ĐỔ MÀU THEO CHỨC NĂNG)\n"
+"   4. NÚT BẤM (BUTTON) - PHONG CÁCH PASTEL BO TRÒN\n"
 "   =================================================== */\n"
 "QPushButton {\n"
-"    color: #ffffff;\n"
+"    border-radius: 15px; /* Bo góc viên thuốc */\n"
+"    font-family: \"Segoe UI\", Roboto, Arial, sans-serif;\n"
+"    font-size: 14px;\n"
 "    font-weight: bold;\n"
-"    font-size: 13px;\n"
-"    border-radius: 12px; /* Bo tròn mềm mại ở đây */\n"
-"    padding: 6px 12px;\n"
-"    border: none;\n"
+"    padding: 8px 16px;\n"
+"    border: 2px solid transparent;\n"
 "}\n"
 "\n"
-"/* Trạng thái nút bị khóa (khi chưa có link) */\n"
 "QPushButton:disabled {\n"
-"    background-color: #ced4da;\n"
-"    color: #6c757d;\n"
+"    background-color: #e9ecef;\n"
+"    color: #adb5bd;\n"
 "}\n"
 "\n"
-"/* ---> Nút Quét (jBntScan) - Màu Xanh Dương <--- */\n"
-"QPushButton#jBntScan {\n"
-"    background-color: #0d6efd; \n"
-"}\n"
-"QPushButton#jBntScan:hover {\n"
-"    background-color: #0b5ed7; \n"
-"}\n"
+"/* ---> Nút Quét (Màu Xanh lam Pastel) <--- */\n"
+"QPushButton#jBntScan { background-color: #cce5ff; color: #004085; }\n"
+"QPushButton#jBntScan:hover { background-color: #b8daff; border: 2px solid #004085; }\n"
 "\n"
-"/* ---> Nút Path Traversal (pushButton) - Màu Cam <--- */\n"
-"QPushButton#pushButton {\n"
-"    background-color: #fd7e14;\n"
-"}\n"
-"QPushButton#pushButton:hover {\n"
-"    background-color: #e85e0c;\n"
-"}\n"
+"/* ---> Nút Path Traversal (Màu Cam Pastel) <--- */\n"
+"QPushButton#pushButton { background-color: #fff3cd; color: #856404; }\n"
+"QPushButton#pushButton:hover { background-color: #ffe8a1; border: 2px solid #856404; }\n"
 "\n"
-"/* ---> Nút SQLi (btnSQLi) - Màu Đỏ <--- */\n"
-"QPushButton#btnSQLi {\n"
-"    background-color: #dc3545;\n"
-"}\n"
-"QPushButton#btnSQLi:hover {\n"
-"    background-color: #c82333;\n"
-"}\n"
+"/* ---> Nút SQLi (Màu Đỏ Pastel) <--- */\n"
+"QPushButton#btnSQLi { background-color: #f8d7da; color: #721c24; }\n"
+"QPushButton#btnSQLi:hover { background-color: #f5c6cb; border: 2px solid #721c24; }\n"
 "\n"
-"/* ---> Nút XSS (btnXSS) - Màu Xanh Lá <--- */\n"
-"QPushButton#btnXSS {\n"
-"    background-color: #198754;\n"
-"}\n"
-"QPushButton#btnXSS:hover {\n"
-"    background-color: #157347;\n"
-"}\n"
-"")
+"/* ---> Nút XSS (Màu Xanh lá Pastel) <--- */\n"
+"QPushButton#btnXSS { background-color: #d4edda; color: #155724; }\n"
+"QPushButton#btnXSS:hover { background-color: #c3e6cb; border: 2px solid #155724; }")
         self.centralwidget = QtWidgets.QWidget(parent=MainWindow)
         self.centralwidget.setObjectName("centralwidget")
         self.txtGetLink = QtWidgets.QTextEdit(parent=self.centralwidget)
-        self.txtGetLink.setGeometry(QtCore.QRect(80, 50, 221, 31))
+        self.txtGetLink.setGeometry(QtCore.QRect(80, 60, 221, 41))
         self.txtGetLink.setObjectName("txtGetLink")
         self.label = QtWidgets.QLabel(parent=self.centralwidget)
-        self.label.setGeometry(QtCore.QRect(160, 0, 611, 41))
+        self.label.setGeometry(QtCore.QRect(160, 0, 611, 61))
         font = QtGui.QFont()
-        font.setFamily("Yu Gothic Medium")
+        font.setFamily("Sitka")
         font.setPointSize(26)
         font.setBold(True)
         self.label.setFont(font)
@@ -137,7 +143,7 @@ class Ui_MainWindow(object):
 "    font-weight: bold;")
         self.label.setObjectName("label")
         self.label_2 = QtWidgets.QLabel(parent=self.centralwidget)
-        self.label_2.setGeometry(QtCore.QRect(0, 50, 71, 31))
+        self.label_2.setGeometry(QtCore.QRect(0, 60, 71, 41))
         font = QtGui.QFont()
         font.setFamily("Segoe UI")
         font.setPointSize(-1)
@@ -152,7 +158,7 @@ class Ui_MainWindow(object):
 "    padding-bottom: 2px;")
         self.label_2.setObjectName("label_2")
         self.jBntScan = QtWidgets.QPushButton(parent=self.centralwidget)
-        self.jBntScan.setGeometry(QtCore.QRect(310, 50, 101, 31))
+        self.jBntScan.setGeometry(QtCore.QRect(310, 60, 121, 41))
         self.jBntScan.setStyleSheet("\n"
 "\n"
 "/* CSS */\n"
@@ -206,13 +212,13 @@ class Ui_MainWindow(object):
         self.tableWidget.setHorizontalHeaderItem(3, item)
         self.tabWidget.addTab(self.Tab_2, "")
         self.pushButton = QtWidgets.QPushButton(parent=self.centralwidget)
-        self.pushButton.setGeometry(QtCore.QRect(420, 50, 171, 31))
+        self.pushButton.setGeometry(QtCore.QRect(430, 60, 191, 41))
         self.pushButton.setObjectName("pushButton")
         self.btnSQLi = QtWidgets.QPushButton(parent=self.centralwidget)
-        self.btnSQLi.setGeometry(QtCore.QRect(600, 50, 111, 31))
+        self.btnSQLi.setGeometry(QtCore.QRect(630, 60, 131, 41))
         self.btnSQLi.setObjectName("btnSQLi")
         self.btnXSS = QtWidgets.QPushButton(parent=self.centralwidget)
-        self.btnXSS.setGeometry(QtCore.QRect(720, 50, 111, 31))
+        self.btnXSS.setGeometry(QtCore.QRect(770, 60, 131, 41))
         self.btnXSS.setObjectName("btnXSS")
         MainWindow.setCentralWidget(self.centralwidget)
         self.menubar = QtWidgets.QMenuBar(parent=MainWindow)

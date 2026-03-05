@@ -15,122 +15,128 @@
   </property>
   <property name="styleSheet">
    <string notr="true">/* ===================================================
-   1. NỀN CHUNG VÀ CÁC Ô NHẬP LIỆU / HIỂN THỊ
+   1. NỀN CHUNG VÀ CÁC CHỮ (TEXT/LABEL)
    =================================================== */
 QWidget#centralwidget {
-    background-color: #f4f6f9;
-	color: #212529;
+    background-color: #f8f9fa; /* Màu nền xám trắng hiện đại */
 }
 
-QTextEdit, QTextBrowser {
-    background-color: #ffffff;
-    border: 1px solid #ced4da;
-    border-radius: 8px;
-    padding: 6px;
-    font-size: 13px;
+/* SỬA LỖI TÀNG HÌNH TIÊU ĐỀ CHÍNH */
+QLabel#label {
+    color: #2c3e50; /* Màu xám đen đậm cho chữ Tool Fuzzing */
+    font-weight: bold;
+}
+
+/* Chữ &quot;Nhập URL&quot; */
+QLabel#label_2 {
+    color: #34495e; 
+    font-weight: bold;
+    font-size: 14px;
+    font-family: &quot;Segoe UI&quot;, Roboto, Arial, sans-serif;
 }
 
 /* ===================================================
-   2. BẢNG KẾT QUẢ (TABLE WIDGET) VÀ TAB WIDGET
+   2. CÁC Ô NHẬP LIỆU VÀ HIỂN THỊ LOG (TEXT AREA)
    =================================================== */
-QTableWidget {
+QTextEdit, QTextBrowser {
     background-color: #ffffff;
-    border: 1px solid #ced4da;
+    border: 2px solid #ced4da;
     border-radius: 8px;
-    gridline-color: #e9ecef;
-    font-size: 13px;
+    padding: 8px;
+    font-size: 14px;
+    color: #212529;
 }
 
-QHeaderView::section {
-    background-color: #343a40;
-    color: #ffffff;
-    font-weight: bold;
-    padding: 5px;
-    border: none;
-    border-right: 1px solid #495057;
+/* Hiệu ứng khi bấm chuột vào ô nhập URL */
+QTextEdit:focus {
+    border: 2px solid #86b7fe; 
 }
 
+/* ===================================================
+   3. BẢNG KẾT QUẢ VÀ CÁC TAB (TAB WIDGET)
+   =================================================== */
 QTabWidget::pane {
     border: 1px solid #ced4da;
-    border-radius: 6px;
+    border-radius: 8px;
     background: #ffffff;
+    top: -1px;
 }
 
 QTabBar::tab {
     background: #e9ecef;
     border: 1px solid #ced4da;
-    padding: 6px 16px;
-    border-top-left-radius: 6px;
-    border-top-right-radius: 6px;
+    padding: 8px 20px;
+    border-top-left-radius: 8px;
+    border-top-right-radius: 8px;
     margin-right: 2px;
+    color: #495057;
+    font-weight: bold;
 }
 
 QTabBar::tab:selected {
     background: #ffffff;
     border-bottom-color: #ffffff;
+    color: #0d6efd; /* Chữ màu xanh khi chọn tab */
+}
+
+QTableWidget {
+    background-color: #ffffff;
+    border: none;
+    gridline-color: #e9ecef;
+    font-size: 13px;
+    color: #212529;
+}
+
+QHeaderView::section {
+    background-color: #343a40; /* Nền đen nhạt cho tiêu đề bảng */
+    color: #ffffff;
     font-weight: bold;
-    color: #0d6efd;
+    padding: 8px;
+    border: none;
+    border-right: 1px solid #495057;
 }
 
 /* ===================================================
-   3. NÚT BẤM (BO TRÒN, ĐỔ MÀU THEO CHỨC NĂNG)
+   4. NÚT BẤM (BUTTON) - PHONG CÁCH PASTEL BO TRÒN
    =================================================== */
 QPushButton {
-    color: #ffffff;
+    border-radius: 15px; /* Bo góc viên thuốc */
+    font-family: &quot;Segoe UI&quot;, Roboto, Arial, sans-serif;
+    font-size: 14px;
     font-weight: bold;
-    font-size: 13px;
-    border-radius: 12px; /* Bo tròn mềm mại ở đây */
-    padding: 6px 12px;
-    border: none;
+    padding: 8px 16px;
+    border: 2px solid transparent;
 }
 
-/* Trạng thái nút bị khóa (khi chưa có link) */
 QPushButton:disabled {
-    background-color: #ced4da;
-    color: #6c757d;
+    background-color: #e9ecef;
+    color: #adb5bd;
 }
 
-/* ---&gt; Nút Quét (jBntScan) - Màu Xanh Dương &lt;--- */
-QPushButton#jBntScan {
-    background-color: #0d6efd; 
-}
-QPushButton#jBntScan:hover {
-    background-color: #0b5ed7; 
-}
+/* ---&gt; Nút Quét (Màu Xanh lam Pastel) &lt;--- */
+QPushButton#jBntScan { background-color: #cce5ff; color: #004085; }
+QPushButton#jBntScan:hover { background-color: #b8daff; border: 2px solid #004085; }
 
-/* ---&gt; Nút Path Traversal (pushButton) - Màu Cam &lt;--- */
-QPushButton#pushButton {
-    background-color: #fd7e14;
-}
-QPushButton#pushButton:hover {
-    background-color: #e85e0c;
-}
+/* ---&gt; Nút Path Traversal (Màu Cam Pastel) &lt;--- */
+QPushButton#pushButton { background-color: #fff3cd; color: #856404; }
+QPushButton#pushButton:hover { background-color: #ffe8a1; border: 2px solid #856404; }
 
-/* ---&gt; Nút SQLi (btnSQLi) - Màu Đỏ &lt;--- */
-QPushButton#btnSQLi {
-    background-color: #dc3545;
-}
-QPushButton#btnSQLi:hover {
-    background-color: #c82333;
-}
+/* ---&gt; Nút SQLi (Màu Đỏ Pastel) &lt;--- */
+QPushButton#btnSQLi { background-color: #f8d7da; color: #721c24; }
+QPushButton#btnSQLi:hover { background-color: #f5c6cb; border: 2px solid #721c24; }
 
-/* ---&gt; Nút XSS (btnXSS) - Màu Xanh Lá &lt;--- */
-QPushButton#btnXSS {
-    background-color: #198754;
-}
-QPushButton#btnXSS:hover {
-    background-color: #157347;
-}
-</string>
+/* ---&gt; Nút XSS (Màu Xanh lá Pastel) &lt;--- */
+QPushButton#btnXSS { background-color: #d4edda; color: #155724; }
+QPushButton#btnXSS:hover { background-color: #c3e6cb; border: 2px solid #155724; }</string>
   </property>
   <widget class="QWidget" name="centralwidget">
    <widget class="QTextEdit" name="txtGetLink">
     <property name="geometry">
      <rect>
       <x>80</x>
-      <y>50</y>
+      <y>60</y>
       <width>221</width>
-      <height>31</height>
+      <height>41</height>
      </rect>
     </property>
    </widget>
@@ -140,12 +146,12 @@ QPushButton#btnXSS:hover {
       <x>160</x>
       <y>0</y>
       <width>611</width>
-      <height>41</height>
+      <height>61</height>
      </rect>
     </property>
     <property name="font">
      <font>
-      <family>Yu Gothic Medium</family>
+      <family>Sitka</family>
       <pointsize>26</pointsize>
       <bold>true</bold>
      </font>
@@ -162,9 +168,9 @@ QPushButton#btnXSS:hover {
     <property name="geometry">
      <rect>
       <x>0</x>
-      <y>50</y>
+      <y>60</y>
       <width>71</width>
-      <height>31</height>
+      <height>41</height>
      </rect>
     </property>
     <property name="font">
@@ -193,9 +199,9 @@ QPushButton#btnXSS:hover {
     <property name="geometry">
      <rect>
       <x>310</x>
-      <y>50</y>
-      <width>101</width>
-      <height>31</height>
+      <y>60</y>
+      <width>121</width>
+      <height>41</height>
      </rect>
     </property>
     <property name="styleSheet">
@@ -296,10 +302,10 @@ QPushButton#btnXSS:hover {
    <widget class="QPushButton" name="pushButton">
     <property name="geometry">
      <rect>
-      <x>420</x>
-      <y>50</y>
-      <width>171</width>
-      <height>31</height>
+      <x>430</x>
+      <y>60</y>
+      <width>191</width>
+      <height>41</height>
      </rect>
     </property>
     <property name="text">
@@ -309,10 +315,10 @@ QPushButton#btnXSS:hover {
    <widget class="QPushButton" name="btnSQLi">
     <property name="geometry">
      <rect>
-      <x>600</x>
-      <y>50</y>
-      <width>111</width>
-      <height>31</height>
+      <x>630</x>
+      <y>60</y>
+      <width>131</width>
+      <height>41</height>
      </rect>
     </property>
     <property name="text">
@@ -322,10 +328,10 @@ QPushButton#btnXSS:hover {
    <widget class="QPushButton" name="btnXSS">
     <property name="geometry">
      <rect>
-      <x>720</x>
-      <y>50</y>
-      <width>111</width>
-      <height>31</height>
+      <x>770</x>
+      <y>60</y>
+      <width>131</width>
+      <height>41</height>
      </rect>
     </property>
     <property name="text">

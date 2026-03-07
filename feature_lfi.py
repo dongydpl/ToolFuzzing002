@@ -20,8 +20,7 @@ class LFIThread(QThread):
             "../../../../windows/win.ini",
             "/etc/passwd",
             "./index.php", 
-            "index.php",
-            "php://filter/convert.base64-encode/resource=index.php"
+            "index.php"
         ]
         
         #duong dan file log
@@ -94,9 +93,16 @@ class LFIThread(QThread):
                             except: pass
 
                         if is_vuln:
-                            self.ket_qua_scan.emit(url, payload, "CÓ LỖI (FILE READ)")
-                            self.log_process.emit(f"<b style='color:orange'>[+] Đọc được file: {payload}</b>")
-                            found_lfi_param = param_name 
+                            if "../" in payload or payload.startswith("/") or payload.startswith("..\\"):
+                                vuln_type = "CÓ LỖI (PATH TRAVERSAL)"
+                            else:
+                                vuln_type = "CÓ LỖI (LOCAL FILE DISCLOSURE)"
+
+                            # Phát tín hiệu lên GUI với loại lỗi đã phân loại
+                            self.ket_qua_scan.emit(url, payload, vuln_type)
+                            self.log_process.emit(f"<b style='color:orange'>[+] Đọc được file: {payload} - Phân loại: {vuln_type}</b>")
+                            
+                            found_lfi_param = param_name
                             break 
                             
                     except Exception: pass

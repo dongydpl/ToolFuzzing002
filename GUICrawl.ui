@@ -143,9 +143,9 @@ QPushButton#btnXSS:hover { background-color: #c3e6cb; border: 2px solid #155724;
    <widget class="QLabel" name="label">
     <property name="geometry">
      <rect>
-      <x>160</x>
+      <x>150</x>
       <y>0</y>
-      <width>611</width>
+      <width>731</width>
       <height>61</height>
      </rect>
     </property>
@@ -302,7 +302,7 @@ QPushButton#btnXSS:hover { background-color: #c3e6cb; border: 2px solid #155724;
    <widget class="QPushButton" name="pushButton">
     <property name="geometry">
      <rect>
-      <x>430</x>
+      <x>440</x>
       <y>60</y>
       <width>191</width>
       <height>41</height>
@@ -315,7 +315,7 @@ QPushButton#btnXSS:hover { background-color: #c3e6cb; border: 2px solid #155724;
    <widget class="QPushButton" name="btnSQLi">
     <property name="geometry">
      <rect>
-      <x>630</x>
+      <x>640</x>
       <y>60</y>
       <width>131</width>
       <height>41</height>
@@ -328,7 +328,7 @@ QPushButton#btnXSS:hover { background-color: #c3e6cb; border: 2px solid #155724;
    <widget class="QPushButton" name="btnXSS">
     <property name="geometry">
      <rect>
-      <x>770</x>
+      <x>780</x>
       <y>60</y>
       <width>131</width>
       <height>41</height>

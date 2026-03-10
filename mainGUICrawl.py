@@ -90,7 +90,7 @@ class PhanMemLFI(QMainWindow):
 
   
     def xu_ly_lfi(self):
-        self.ui.tableWidget.setRowCount(0)
+       
 
        
         self.attacker = LFIThread(self.danh_sach_muc_tieu_co_tham_so)
@@ -113,7 +113,7 @@ class PhanMemLFI(QMainWindow):
         self.ui.tableWidget.setItem(row, 3, item_status)
     
     def xu_ly_sqli(self):
-       
+     
         self.attacker_sql = SQLiThread(self.danh_sach_muc_tieu_full)
         self.attacker_sql.log_process.connect(self.ui.textBrowser.append)
         self.attacker_sql.ket_qua_scan.connect(self.dien_vao_bang)
